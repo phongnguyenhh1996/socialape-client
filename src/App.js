@@ -1,26 +1,40 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 import './App.css';
+import Home from "./containers/Home/Home.tsx";
+import Login from "./containers/Login/Login.tsx";
+import MainLayout from "./components/Layout/MainLayout";
+import { StylesProvider } from '@material-ui/core/styles';
+import { Provider } from "react-redux";
+import { sagaMiddleware } from "./middleware";
+import rootSaga from "./sagas";
+import store from "./store";
 
-function App() {
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Provider store={store}>
+      <StylesProvider injectFirst>
+        <Router>
+          <div>
+            <MainLayout>
+              <Switch>
+                <Route path="/login">
+                  <Login exact />
+                </Route>
+                <Route exact path="/">
+                  <Home />
+                </Route>
+              </Switch>
+            </MainLayout>
+          </div>
+        </Router>
+      </StylesProvider>
+    </Provider>
   );
 }
 
-export default App;
+sagaMiddleware.run(rootSaga)
