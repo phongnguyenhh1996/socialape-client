@@ -1,9 +1,9 @@
-import { USER_LOGIN } from "../constants";
+import { USER_LOGIN_REQUEST } from "../constants";
 import { UserInfo } from "../components/Header/Header";
 
 export const userLogin = (userInfo: UserInfo) => {
   return {
-    type: USER_LOGIN,
+    type: USER_LOGIN_REQUEST,
     data: userInfo
   }
 }

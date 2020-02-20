@@ -1,5 +1,6 @@
-import { takeLatest } from "redux-saga/effects";
-import { USER_LOGIN } from "../constants/index";
+import { takeLatest, put } from "redux-saga/effects";
+import { USER_LOGIN_REQUEST } from "../constants/index";
+import API from "../axios";
 
 function* userLogin(action) {
   console.log(action);
@@ -7,5 +8,5 @@ function* userLogin(action) {
 }
 
 export default function* login(){
-  yield takeLatest(USER_LOGIN, userLogin)
+  yield takeLatest(USER_LOGIN_REQUEST, userLogin)
 }
