@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid/Grid';
 import Button from '@material-ui/core/Button/Button';
 import { userLogin } from "../../actions";
 import { connect } from "react-redux";
+import { useHistory } from "react-router";
 
 export interface UserInfo {
   email: string,
@@ -12,13 +13,15 @@ export interface UserInfo {
 }
 
 interface HeaderProps {
-  userLogin(userInfor: UserInfo): void
+  userLogin(userInfor: UserInfo, push: any): void
+  user: any
 }
 
-const Header: React.FC<HeaderProps> = ({ userLogin }) => {
+const Header: React.FC<HeaderProps> = ({ userLogin, user }) => {
 
   const [userinfo, setUserinfo] = useState<UserInfo>({} as UserInfo)
-
+  const history = useHistory();
+  const { isLoading } = user;
   const handleInputChange = (e: React.SyntheticEvent) => {
     const { name, value } = e.target as HTMLInputElement
     setUserinfo({...userinfo, [name]: value})
@@ -26,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ userLogin }) => {
 
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    userLogin(userinfo);
+    userLogin(userinfo, history.push);
     console.log(userinfo);
   }
 
@@ -55,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ userLogin }) => {
                   variant="outlined"
                   onChange={handleInputChange}
                 />
-                <Button variant="contained" color="primary" type="submit" size="small">
+                <Button disabled={isLoading} variant="contained" color="primary" type="submit" size="small">
                   Đăng nhập
                 </Button>
               </Styled.Header__Form>
@@ -66,8 +69,12 @@ const Header: React.FC<HeaderProps> = ({ userLogin }) => {
   )
 }
 
+const mapStateToProps = (state: any) => ({
+  user: state.user
+})
+
 const mapDispatchToProps = {
   userLogin
 }
 
-export default connect(null, mapDispatchToProps)(Header)
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

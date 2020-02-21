@@ -1,15 +1,6 @@
-import * as TYPES from "../constants";
+import user from "./user";
+import { combineReducers } from "redux";
 
-const reducer = (state = {}, action) => {
-  switch (action.type) {
-    case TYPES.USER_LOGIN_REQUEST:
-      return {
-        ...state,
-        ...action.data
-      }
-    default:
-      return state
-  }
-}
-
-export default reducer;
+export default combineReducers({
+  user
+})

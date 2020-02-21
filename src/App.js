@@ -2,7 +2,8 @@ import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 import './App.css';
 import Home from "./containers/Home/Home.tsx";
@@ -14,23 +15,41 @@ import { sagaMiddleware } from "./middleware";
 import rootSaga from "./sagas";
 import store from "./store";
 
+function PrivateRoute({ children, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        store.getState().user.token ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
 export default function App() {
   return (
     <Provider store={store}>
       <StylesProvider injectFirst>
         <Router>
-          <div>
             <MainLayout>
               <Switch>
                 <Route path="/login">
                   <Login exact />
                 </Route>
-                <Route exact path="/">
+                <PrivateRoute exact path="/">
                   <Home />
-                </Route>
+                </PrivateRoute>
               </Switch>
             </MainLayout>
-          </div>
         </Router>
       </StylesProvider>
     </Provider>

@@ -1,10 +1,17 @@
-import { takeLatest, put } from "redux-saga/effects";
+import { takeLatest, put, call } from "redux-saga/effects";
 import { USER_LOGIN_REQUEST } from "../constants/index";
-import API from "../axios";
+import { get } from "lodash";
+import * as userService from "../services/user";
+import { userLoginSuccess } from "../actions";
 
 function* userLogin(action) {
-  console.log(action);
-  yield
+  const res = yield call(userService.userLogin, action.data)
+  const token = get(res, 'data.token')
+  if (token) {
+    localStorage.setItem('token', token)
+    yield put(userLoginSuccess())
+    yield action.push('/')
+  } 
 }
 
 export default function* login(){
